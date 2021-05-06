@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"net"
-	"os"
 	"strconv"
 	"time"
 
@@ -20,29 +19,19 @@ func main() {
 		log.Fatal(err)
 	}
 
-	bcServer = make(chan []Block)
+	go func() {
+		// generate genesis Block
+		t := time.Now()
+		genesisBlock := Block{}
+		genesisBlock = Block{0, t.String(), 0, calculateHash(genesisBlock), "", difficulty, ""}
+		spew.Dump(genesisBlock)
 
-	// generate genesis Block
-	t := time.Now()
-	genesisBlock := Block{0, t.String(), 0, "", ""}
-	spew.Dump(genesisBlock)
-	Blockchain = append(Blockchain, genesisBlock)
+		mutex.Lock()
+		Blockchain = append(Blockchain, genesisBlock)
+		mutex.Unlock()
+	}()
 
-	// create TCP server
-	server, err := net.Listen("tcp", ":"+os.Getenv("ADDR"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer server.Close()
-
-	for {
-		conn, err := server.Accept()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		go handleConn(conn)
-	}
+	log.Fatal(run())
 }
 
 func handleConn(conn net.Conn) {
@@ -60,11 +49,7 @@ func handleConn(conn net.Conn) {
 				continue
 			}
 
-			newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], bpm)
-			if err != nil {
-				log.Println(err)
-				continue
-			}
+			newBlock := generateBlock(Blockchain[len(Blockchain)-1], bpm)
 
 			if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
 				newBlockchain := append(Blockchain, newBlock)
