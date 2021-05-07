@@ -14,37 +14,21 @@ type Block struct {
 	BPM       int    // or beats per minute, is your pulse rate
 	Hash      string // is a SHA256 identifier representing this data record
 	PrevHash  string // is the SHA256 identifier of the previous record in the chain
-	Validator string
 }
 
 // Blockchain is a series of validated Blocks
 var Blockchain []Block
-var tempBlocks []Block
-
-// candidateBlocks handles incoming blocks for validation
-var candidateBlocks = make(chan Block)
-
-// announcements broadcasts winning validator to all nodes
-var announcements = make(chan string)
-
 var mutex = &sync.Mutex{}
 
-// validators keeps track of open validators and balances
-var validators = make(map[string]int)
-
-func calculateHash(s string) string {
+func calculateHash(block Block) string {
+	record := fmt.Sprint(block.Index) + block.Timestamp + fmt.Sprint(block.BPM) + block.PrevHash
 	h := sha256.New()
-	h.Write([]byte(s))
+	h.Write([]byte(record))
 	hashed := h.Sum(nil)
 	return hex.EncodeToString(hashed)
 }
 
-func calculateBlockHash(block Block) string {
-	record := fmt.Sprint(block.Index) + block.Timestamp + fmt.Sprint(block.BPM) + block.PrevHash
-	return calculateHash(record)
-}
-
-func generateBlock(oldBlock Block, BPM int, address string) (Block, error) {
+func generateBlock(oldBlock Block, BPM int) Block {
 	var newBlock Block
 
 	t := time.Now()
@@ -53,10 +37,9 @@ func generateBlock(oldBlock Block, BPM int, address string) (Block, error) {
 	newBlock.Timestamp = t.String()
 	newBlock.BPM = BPM
 	newBlock.PrevHash = oldBlock.Hash
-	newBlock.Hash = calculateBlockHash(newBlock)
-	newBlock.Validator = address
+	newBlock.Hash = calculateHash(newBlock)
 
-	return newBlock, nil
+	return newBlock
 
 }
 
@@ -69,15 +52,9 @@ func isBlockValid(newBlock, oldBlock Block) bool {
 		return false
 	}
 
-	if calculateBlockHash(newBlock) != newBlock.Hash {
+	if calculateHash(newBlock) != newBlock.Hash {
 		return false
 	}
 
 	return true
-}
-
-func replaceChain(newBlocks []Block) {
-	if len(newBlocks) > len(Blockchain) {
-		Blockchain = newBlocks
-	}
 }

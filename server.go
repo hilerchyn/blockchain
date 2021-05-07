@@ -63,15 +63,11 @@ func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	newBlock, err := generateBlock(Blockchain[len(Blockchain)-1], m.BPM, "xx")
-	if err != nil {
-		respondWithJSON(w, r, http.StatusInternalServerError, m)
-		return
-	}
+	newBlock := generateBlock(Blockchain[len(Blockchain)-1], m.BPM)
 
 	if isBlockValid(newBlock, Blockchain[len(Blockchain)-1]) {
-		newBlockchain := append(Blockchain, newBlock)
-		replaceChain(newBlockchain)
+		//newBlockchain := append(Blockchain, newBlock)
+		//replaceChain(newBlockchain)
 		spew.Dump(Blockchain)
 	}
 
