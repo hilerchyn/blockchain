@@ -8,11 +8,10 @@ import (
 	"log"
 	"time"
 
-	corePeer "github.com/libp2p/go-libp2p-core/peer"
-	coreStore "github.com/libp2p/go-libp2p-core/peerstore"
+	"github.com/libp2p/go-libp2p-core/peer"
+	"github.com/libp2p/go-libp2p-core/peerstore"
 
 	ma "github.com/multiformats/go-multiaddr"
-	//gologging "github.com/whyrusleeping/go-logging"
 )
 
 func main() {
@@ -67,7 +66,7 @@ func main() {
 			log.Fatalln(err)
 		}
 
-		peerid, err := corePeer.Decode(pid)
+		peerid, err := peer.Decode(pid)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -75,12 +74,12 @@ func main() {
 		// Decapsulate the /ipfs/<peerID> part from the target
 		// /ip4/<a.b.c.d>/ipfs/<peer> becomes /ip4/<a.b.c.d>
 		targetPeerAddr, _ := ma.NewMultiaddr(
-			fmt.Sprintf("/ipfs/%s", corePeer.Encode(peerid)))
+			fmt.Sprintf("/ipfs/%s", peer.Encode(peerid)))
 		targetAddr := ipfsaddr.Decapsulate(targetPeerAddr)
 
 		// We have a peer ID and a targetAddr so we add it to the peerstore
 		// so LibP2P knows how to contact it
-		ha.Peerstore().AddAddr(peerid, targetAddr, coreStore.PermanentAddrTTL)
+		ha.Peerstore().AddAddr(peerid, targetAddr, peerstore.PermanentAddrTTL)
 
 		log.Println("opening stream")
 		// make a new stream from host B to host A
