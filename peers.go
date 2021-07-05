@@ -16,8 +16,8 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	libp2p "github.com/libp2p/go-libp2p"
+	coreCrypto "github.com/libp2p/go-libp2p-core/crypto"
 	net "github.com/libp2p/go-libp2p-core/network"
-	crypto "github.com/libp2p/go-libp2p-crypto"
 	host "github.com/libp2p/go-libp2p-host"
 	ma "github.com/multiformats/go-multiaddr"
 )
@@ -31,7 +31,7 @@ func makeBasicHost(listenPort int, secio bool, randseed int64) (host.Host, error
 		r = mrand.New(mrand.NewSource(randseed))
 	}
 
-	priv, _, err := crypto.GenerateKeyPairWithReader(crypto.RSA, 2048, r)
+	priv, _, err := coreCrypto.GenerateKeyPairWithReader(coreCrypto.RSA, 2048, r)
 
 	if err != nil {
 		return nil, err

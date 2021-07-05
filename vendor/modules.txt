@@ -108,9 +108,6 @@ github.com/libp2p/go-libp2p-core/sec
 github.com/libp2p/go-libp2p-core/sec/insecure
 github.com/libp2p/go-libp2p-core/sec/insecure/pb
 github.com/libp2p/go-libp2p-core/transport
-# github.com/libp2p/go-libp2p-crypto v0.1.0
-## explicit
-github.com/libp2p/go-libp2p-crypto
 # github.com/libp2p/go-libp2p-discovery v0.5.0
 github.com/libp2p/go-libp2p-discovery
 # github.com/libp2p/go-libp2p-host v0.1.0
@@ -125,11 +122,7 @@ github.com/libp2p/go-libp2p-nat
 # github.com/libp2p/go-libp2p-noise v0.1.1
 github.com/libp2p/go-libp2p-noise
 github.com/libp2p/go-libp2p-noise/pb
-# github.com/libp2p/go-libp2p-peer v0.2.0
-## explicit
-github.com/libp2p/go-libp2p-peer
 # github.com/libp2p/go-libp2p-peerstore v0.2.6
-## explicit
 github.com/libp2p/go-libp2p-peerstore
 github.com/libp2p/go-libp2p-peerstore/addr
 github.com/libp2p/go-libp2p-peerstore/pstoremem
@@ -208,8 +201,6 @@ github.com/pkg/errors
 github.com/spacemonkeygo/spacelog
 # github.com/spaolacci/murmur3 v1.1.0
 github.com/spaolacci/murmur3
-# github.com/whyrusleeping/go-logging v0.0.1
-## explicit
 # github.com/whyrusleeping/multiaddr-filter v0.0.0-20160516205228-e903e4adabd7
 github.com/whyrusleeping/multiaddr-filter
 # go.opencensus.io v0.22.4
