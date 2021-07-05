@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/host"
+	"github.com/libp2p/go-libp2p-core/mux"
 	"io"
 	"log"
 	mrand "math/rand"
@@ -87,7 +88,11 @@ func readData(rw *bufio.ReadWriter) {
 	for {
 		str, err := rw.ReadString('\n')
 		if err != nil {
-			log.Fatal(err)
+			if err == mux.ErrReset {
+				log.Println("handleStream:readData:error: remote peer closed: ", err)
+				return
+			}
+			log.Fatal("handleStream:readData:error: ", err)
 		}
 
 		if str == "" {
